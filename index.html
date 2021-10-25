@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <style>
+        .container {
+            border: 1px solid rgba(0, 0, 0, .11);
+            ;
+            padding: 10px;
+            width: 500px
+        }
+
+        .controls-item {
+            display: inline-block;
+        }
+
+        .btn {
+            margin: 1px;
+        }
+        #multipleDelete{
+            display: none;
+        }
+    </style>
+</head>
+<section id="dialogBoxEdit"></section>
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name" style="display: block;margin: 20px auto;">
+<div class="container ">
+
+</div>
+<div class="container ">
+    <!-- Table structure here -->
+    <table class="table table-dark" id="our-table">
+        <thead>
+            <tr>
+                <th><input type="checkbox"></th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+
+        </tbody>
+    </table>
+</div>
+
+
+<div class="container ">
+    <div id="pagination-wrapper"></div>
+</div>
+<button id="multipleDelete">Delete</button>
+<script src="./res.js"></script>
+<script>
+   
+
+    /*
+        1 - Loop Through Array & Access each value
+      2 - Create Table Rows & append to table
+    */
+
+
+   
+</script>
+
+</html>
