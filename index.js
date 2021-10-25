@@ -10,19 +10,7 @@ const admin =  async() =>{
   let res = await response.json();
   let tableData = res
   console.log(tableData);
-  const data = { "req_per_page": 10, "page_no": 1 };
-
-  // At a time maximum allowed pages to be shown in pagination div
-  const pagination_visible_pages = Math.round(tableData.length/10);
-  console.log(pagination_visible_pages)
-
-  // var state = {
-  //     'querySet': tableData,
-
-  //     'page': 1,
-  //     'rows': 10,
-  //     'window': 5,
-  // }
+ 
   tableBuild(tableData)
 
 
@@ -30,13 +18,54 @@ const admin =  async() =>{
 admin()
 
 function tableBuild(data){
-  console.log(data)
-  var table = $('#table-body')
-  document.getElementById("table-body").style.visibility ="visible"
+    console.log(data)
+  const numberOfItems = data.length
+  const numberPerPage = 10
+  const currentPage = 1
+  const numberOfPages = Math.ceil(numberOfItems/numberPerPage)
+  function buildPage(currPage) {
+      const trimStart = (currPage-1)*numberPerPage
+      const trimEnd = trimStart + numberPerPage
+      
+      building(data.slice(trimStart, trimEnd),data)
+
+  }
+  buildPage(1)
+  const page =  document.getElementById("pagination-wrapper")
+  page.innerHTML =""
+  page.style.display ="flex"
+  for(let i=0;i<numberOfPages;i++)
+  {
+      // pagination-wrapper
+      const div =  document.createElement("div")
+      div.innerHTML = `
+      <button class="pagination" value ="${i+1}">${i+1}</button>
+      `
+      page.appendChild(div)
+
+  }
+  const pagei = document.querySelectorAll(".pagination")
+  for(let i=0;i<pagei.length;i++)
+  {
+      pagei[i].addEventListener("click",() =>{  
+          buildPage(pagei[i].value)
+      })
+  }
+ 
   
 
 
 
+ 
+
+}
+
+function building(data,totalData){
+    console.log(totalData)
+  var table = $('#table-body')
+  
+  document.getElementById("table-body").style.visibility ="visible";
+  document.getElementById("table-body").innerHTML =""
   for(var i=1 in data)
   {
       
@@ -61,7 +90,7 @@ table.append(row)
           // console.log(r[i].id)
           const docs = r[i].id.replace("delete","")
           
-          const filterValue = data.filter(doc =>doc.id!==docs)
+          const filterValue = totalData.filter(doc =>doc.id!==docs)
           document.getElementById("table-body").innerHTML =""
           tableBuild(filterValue)
       })
@@ -70,8 +99,9 @@ table.append(row)
   const edit =  document.querySelectorAll(".editButton");
   for(let i=0;i<edit.length;i++)
   {
+      console.log(totalData)
       const docs =  edit[i].id.replace("edit","")
-      const element =  data.find(doc =>doc.id===docs)
+      const element =  totalData.find(doc =>doc.id===docs)
       
       const dialogBoxEdit =  document.getElementById("dialogBoxEdit");
       const dialog =  document.createElement("dialog")
@@ -101,12 +131,13 @@ table.append(row)
           dialog.showModal()
           document.getElementById("updateButton").addEventListener("click",(e) =>{
               e.preventDefault()
-              let objIndex = data.findIndex(doc =>doc.id===docs)
-              data[objIndex].name = document.getElementById(`${edit[i]}EditName`).value;
-              data[objIndex].email = document.getElementById(`${edit[i]}EditEmail`).value;
-              data[objIndex].role = document.getElementById(`${edit[i]}EditRole`).value;
+              let objIndex = totalData.findIndex(doc =>doc.id===docs);
+              console.log(objIndex)
+              totalData[objIndex].name = document.getElementById(`${edit[i]}EditName`).value;
+              totalData[objIndex].email = document.getElementById(`${edit[i]}EditEmail`).value;
+              totalData[objIndex].role = document.getElementById(`${edit[i]}EditRole`).value;
               document.getElementById("table-body").innerHTML =""
-              tableBuild(data)
+              tableBuild(totalData)
               dialog.close()
           })
 
@@ -121,7 +152,7 @@ table.append(row)
      deleteCheck[i].addEventListener("change",() =>{
       if(document.getElementById(`${data[i].id}checkbox`).checked===true)
       {
-          const deleteData =  data.find(doc =>doc.id===docs)
+          const deleteData =  totalData.find(doc =>doc.id===docs)
           multipleSelect.push(deleteData)   
       }
       else{
@@ -141,11 +172,9 @@ table.append(row)
   }
   document.getElementById("multipleDelete").addEventListener("click",() =>{
       document.getElementById("table-body").innerHTML =""
-      const results = data.filter(doc => !multipleSelect.some(docs =>docs.id===doc.id))
+      const results = totalData.filter(doc => !multipleSelect.some(docs =>docs.id===doc.id))
       tableBuild(results)
   })
-
-  console.log(multipleSelect)
 }
 function myFunction() {
   var input, filter, table, tr, td, i, txtValue;
